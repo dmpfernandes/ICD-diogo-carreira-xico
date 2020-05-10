@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmlDB>
-    <Questions>
-        <Question idQ="{Integer}" refIdUser="{Integer}">
-            <QuestionBody>{String}</QuestionBody>
-            <Answers>
-                <Answer bool="{boolean}">
-                    <AnswerBody>{String}</AnswerBody>
-                </Answer>
-                <Answer bool="{boolean}">
-                    <AnswerBody>{String}</AnswerBody>
-                </Answer>
-            </Answers>
-        </Question>
-    </Questions>
-    <Users>
-        <User idUser="{integer}" role="{String}">
-            <Name>{String}</Name>
-            <Username>{String}</Username>
-            <Email>{String}</Email>
-            <BirthDate>{String}</BirthDate>
-            <Password>{String}</Password>
+    <questions>
+        <question idQ="{Integer}" refIdUser="{Integer}">
+            <questionBody>{String}</questionBody>
+            <answers>
+                <answer bool="{boolean}">
+                    <answerBody>{String}</answerBody>
+                </answer>
+                <answer bool="{boolean}">
+                    <answerBody>{String}</answerBody>
+                </answer>
+            </answers>
+        </question>
+    </questions>
+    <users>
+        <user idUser="{integer}" role="{String}">
+            <name>{String}</name>
+            <username>{String}</username>
+            <email>{String}</email>
+            <birthDate>{String}</birthDate>
+            <password>{String}</password>
         </user>
-    </Users>
-    <Stats>
-        <Session idS="{integer}" refIdUser="{String}" >
-            <NumOfQuestions>{Integer}</NumOfQuestions>
-            <QuestionsAsked>
+    </users>
+    <stats>
+        <session idS="{integer}" refIdUser="integer" >
+            <numOfQuestions>{Integer}</numOfQuestions>
+            <questionsAsked>
                 <qAsked idQAsked="{string}" refIdQ="{integer}">
-                    <CorrectAnswer numOfCorrectAnswers="{integer}">{List(string)}</CorrectAnswer>
-                    <WrongAnswer numOfWrongAnswers="{integer}">{List(string)}</WrongAnswer>
+                    <correctAnswer numOfCorrectAnswers="{integer}">{List(string)}</correctAnswer>
+                    <wrongAnswer numOfWrongAnswers="{integer}">{List(string)}</wrongAnswer>
                 </qAsked>
-            </QuestionsAsked>
-        </Session>
-
-    </Stats>
+            </questionsAsked>
+        </session>
+    </stats>
 </xmlDB>
