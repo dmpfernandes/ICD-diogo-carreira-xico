@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmlDB>
+    <Questions>
+        <Question idQ="{Integer}" refIdUser="{Integer}">
+            <QuestionBody>{String}</QuestionBody>
+            <Answers>
+                <Answer bool="{boolean}">
+                    <AnswerBody>{String}</AnswerBody>
+                </Answer>
+                <Answer bool="{boolean}">
+                    <AnswerBody>{String}</AnswerBody>
+                </Answer>
+            </Answers>
+        </Question>
+    </Questions>
+    <Users>
+        <User idUser="{integer}" role="{String}">
+            <Name>{String}</Name>
+            <Username>{String}</Username>
+            <Email>{String}</Email>
+            <BirthDate>{String}</BirthDate>
+            <Password>{String}</Password>
+        </user>
+    </Users>
+    <Stats>
+        <Session idS="{integer}" refIdUser="{String}" >
+            <NumOfQuestions>{Integer}</NumOfQuestions>
+            <QuestionsAsked>
+                <qAsked idQAsked="{string}" refIdQ="{integer}">
+                    <CorrectAnswer numOfCorrectAnswers="{integer}">{List(string)}</CorrectAnswer>
+                    <WrongAnswer numOfWrongAnswers="{integer}">{List(string)}</WrongAnswer>
+                </qAsked>
+            </QuestionsAsked>
+        </Session>
+
+    </Stats>
+</xmlDB>
