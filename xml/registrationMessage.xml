@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Registration regNo="0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file://VBOXSVR/shared/registrationMessage.xsd">
+	<Name>Francisco</Name>
+	<UserNumber>40708</UserNumber>
+	<Email>a40708@isel.alunos.pt</Email>
+	<Password>password</Password>
+</Registration>

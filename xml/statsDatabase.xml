@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<statsDatabase xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file://VBOXSVR/shared/statsDatabase.xsd">
+	<questionsAsked>0</questionsAsked>
+	<questionAnswered>0</questionAnswered>
+	<correctAnswers>0</correctAnswers>
+	<wrongAnswers>0</wrongAnswers>
+</statsDatabase>

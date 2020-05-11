@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RequestQuestionRequest refIdQ="0" allStudents="true" refIdUser="0" SessionNumber="0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file://VBOXSVR/shared/requestQuestionRequest.xsd"/>
+<?refIDUser only if allStudents=false?>
