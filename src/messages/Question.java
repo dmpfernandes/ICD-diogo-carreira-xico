@@ -6,12 +6,7 @@ import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Question {
-	
-	/**
-	 * <answer bool="{boolean}">
-                    <answerBody>{String}</answerBody>
-                </answer>
-	 */
+
 	@XmlAttribute(name = "id")
 	private int questionId;
 	private String questionBody;
