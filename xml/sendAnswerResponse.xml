@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SendAnswerResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file://VBOXSVR/shared/sendAnswerResponse.xsd">
-	<ResultState>
-		<State>100</State>
-		<Description>Description</Description>
-	</ResultState>
-</SendAnswerResponse>
+<sendAnswerResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="sendAnswerResponse.xsd">
+	<requestState>
+		<state>100</state>
+		<description>Description</description>
+	</requestState>
+</sendAnswerResponse>

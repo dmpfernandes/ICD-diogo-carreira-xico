@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RequestQuestionResponse refIdQ="0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file://VBOXSVR/shared/requestQuestionResponse.xsd">
-	<ResultState>
-		<State>100</State>
-		<Description>Descriptio</Description>
-	</ResultState>
-</RequestQuestionResponse>
+<requestQuestionResponse refIdQ="0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="requestQuestionResponse.xsd">
+	<resultState>
+		<state>100</state>
+		<description>Descriptio</description>
+	</resultState>
+</requestQuestionResponse>

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SendAnswerRequest refIdQ="0" refIdUser="0" SessionNumber="0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file://VBOXSVR/shared/sendAnswerRequest.xsd">
-	<Answer>{String}</Answer>
-</SendAnswerRequest>
+<sendAnswerRequest refIdQ="0" refIdUser="0" sessionNumber="0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="sendAnswerRequest.xsd">
+	<answer>{String}</answer>
+</sendAnswerRequest>

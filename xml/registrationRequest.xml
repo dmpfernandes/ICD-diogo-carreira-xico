@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<registrationRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="registrationRequest.xsd">
+	<name>Francisco</name>
+	<username>exemplo</username>
+	<email>a40708@isel.alunos.pt</email>
+	<password>password</password>
+</registrationRequest>

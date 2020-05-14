@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<statsResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file://VBOXSVR/shared/statsResponse.xsd">
+<statsResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="statsResponse.xsd">
 	<value>0</value>
 </statsResponse>
