@@ -132,8 +132,7 @@ public class ClienteSimplesTCP {
 		try {
 			jaxbContext = JAXBContext.newInstance( RegistrationRequest.class );
 			Marshaller jaxbMarshaller   = jaxbContext.createMarshaller();
-	    	RegistrationRequest rr = new RegistrationRequest(name,username,email,dob,pass);
-	    	
+	    	String rr = makeRegistrationRequestXML(name,username, email, dob, pass);
 	    	StringWriter sw = new StringWriter();
 	    	jaxbMarshaller.marshal(rr, sw);
 	    	String xmlString = sw.toString();
@@ -142,6 +141,20 @@ public class ClienteSimplesTCP {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    	
+    }
+    
+    private static String makeRegistrationRequestXML(String name, String username, String email, String birthDate, String password) {
+		
+//    	"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + 
+    	String xml = "<registration>\r\n" + 
+			    	"	<name>"+name +"</name>\r\n" + 
+			    	"   <username>"+username+"</username>\r\n" + 
+			    	"   <email>"+email+"</email>\r\n" + 
+			    	"   <birthDate>"+birthDate+"</birthDate>\r\n" + 
+			    	"   <password>"+password+"</password>\r\n" + 
+			    	"</registration>";
+    	return xml;
     	
     }
     

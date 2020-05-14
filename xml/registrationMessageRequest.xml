@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RegistrationRequest>
+	<name>Francisco</name>
+	<username>40708</username>
+	<email>a40708@isel.alunos.pt</email>
+	<birthDate>27/05/2000</birthDate>
+	<password>password</password>
+</RegistrationRequest>
