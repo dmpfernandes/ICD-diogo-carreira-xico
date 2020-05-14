@@ -3,5 +3,6 @@
 	<name>Francisco</name>
 	<username>exemplo</username>
 	<email>a40708@isel.alunos.pt</email>
+	<dateOfBirth>31-01-92</dateOfBirth>
 	<password>password</password>
 </registrationRequest>

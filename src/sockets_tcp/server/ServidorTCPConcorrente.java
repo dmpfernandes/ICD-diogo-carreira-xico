@@ -58,7 +58,8 @@ public class ServidorTCPConcorrente {
 class HandleConnectionThread extends Thread {
 
     private Socket connection;
-
+    private BufferedReader is = null;
+    private PrintWriter os    = null;
 
     public HandleConnectionThread(Socket connection) {
         this.connection = connection;
@@ -67,8 +68,7 @@ class HandleConnectionThread extends Thread {
 
     public void run() {
 
-        BufferedReader is = null;
-        PrintWriter os    = null;
+        
 
         try {
             // circuito virtual estabelecido: socket cliente na variavel newSock
@@ -79,10 +79,9 @@ class HandleConnectionThread extends Thread {
             os = new PrintWriter(connection.getOutputStream(), true);
 
             String inputLine = is.readLine(); 
-
-            System.out.println("Recebi -> " + inputLine);
-
-            os.println("@" + inputLine.toUpperCase());
+            Service s = new Service();
+            Thread t = new Thread(s);
+     
         }
         catch (IOException e) {
             System.err.println("erro na liga�ao " + connection + ": " + e.getMessage());
@@ -97,5 +96,32 @@ class HandleConnectionThread extends Thread {
             } catch (IOException e) { } 
         }
     } // end run
+    
+    public void post(String out) {
+		// Escreve no socket
+        os.println(out);
+	}
+	
+	public void clear() {
+		os.flush();
+	}
+	
+	public String get() {
+		String in = "";
+		try { in = (String) is.readLine(); }
+		catch (IOException e) {}
+		return in;
+	}
+	
+	public void closeChannel() {
+		try {
+			os.close(); 
+			is.close();
+			connection.close();
+		}
+		catch (IOException e) { 
+			 e.printStackTrace(); 
+		}
+	}
 
 } // end HandleConnectionThread

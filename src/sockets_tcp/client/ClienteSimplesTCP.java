@@ -12,8 +12,10 @@ import java.util.Scanner;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 import messages.RegistrationRequest;
+import messages.RegistrationResponse;
 
 
 
@@ -132,29 +134,24 @@ public class ClienteSimplesTCP {
 		try {
 			jaxbContext = JAXBContext.newInstance( RegistrationRequest.class );
 			Marshaller jaxbMarshaller   = jaxbContext.createMarshaller();
-	    	String rr = makeRegistrationRequestXML(name,username, email, dob, pass);
+			RegistrationRequest request = new RegistrationRequest();
+			request.setName(name);
+			request.setUsername(username);
+			request.setEmail(email);
+			request.setDateOfBirth(dob);
+			request.setPassword(pass);
 	    	StringWriter sw = new StringWriter();
-	    	jaxbMarshaller.marshal(rr, sw);
+	    	jaxbMarshaller.marshal(request, sw);
 	    	String xmlString = sw.toString();
 	    	post(xmlString);
+	    	String response = get();
+	    	jaxbContext = JAXBContext.newInstance( RegistrationResponse.class );
+	    	Unmarshaller jaxbUnmarshaller   = jaxbContext.createUnmarshaller();
+	    	
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
-    }
-    
-    private static String makeRegistrationRequestXML(String name, String username, String email, String birthDate, String password) {
-		
-//    	"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + 
-    	String xml = "<registration>\r\n" + 
-			    	"	<name>"+name +"</name>\r\n" + 
-			    	"   <username>"+username+"</username>\r\n" + 
-			    	"   <email>"+email+"</email>\r\n" + 
-			    	"   <birthDate>"+birthDate+"</birthDate>\r\n" + 
-			    	"   <password>"+password+"</password>\r\n" + 
-			    	"</registration>";
-    	return xml;
     	
     }
     

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sendAnswerResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="sendAnswerResponse.xsd">
-	<requestState>
+	<resultState>
 		<state>100</state>
 		<description>Description</description>
-	</requestState>
+	</resultState>
 </sendAnswerResponse>
