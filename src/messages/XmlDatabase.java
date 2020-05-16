@@ -12,8 +12,19 @@ public class XmlDatabase {
 	
 	@XmlElement(name="Users")
 	public List<User> users;
-	
+
 	@XmlElement(name="Stats")
 	public List<Session> stats;
 	
+	public List<Question> getQuestions() {
+		return questions;
+	}
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public List<Session> getStats() {
+		return stats;
+	}
 }

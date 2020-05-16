@@ -3,6 +3,7 @@ package service_handler;
 import org.w3c.dom.*;
 
 import messages.RegistrationRequest;
+import messages.RegistrationResponse;
 import messages.RequestQuestionRequest;
 import messages.RequestQuestionResponse;
 import messages.SendAnswerRequest;
@@ -15,22 +16,49 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.*;
 import java.io.*;
+import java.net.Socket;
 
-public class Service {
+public class Service extends Thread{
 	
-	private int sessionId;
+	private boolean stopSending = false;
+	private Socket socket;
+	
+	public Service(Socket socket) {
+		this.socket = socket;
+	}
+	
+	public void run() {
+		while(!stopSending) {
+			String xmlString = get();
+			Object requestObject = parseInputIntoDocument(xmlString);
+			
+			if(requestObject instanceof RegistrationRequest) {
+				registerNewUserIfPossible((RegistrationRequest)requestObject);
+			} else if() {
+				
+			}
+		}
+	}
+			
+	private void registerNewUserIfPossible(RegistrationRequest request) {
+		if(canRegisterUser(request)) {
+			addNewUser(request);
+		}
+	}
+
+	private void addNewUser(RegistrationRequest request) {
 		
-	public Service(int sessionId) {
-		this.sessionId = sessionId;
 	}
 
-	public int getSessionId() {
-		return sessionId;
+	private boolean canRegisterUser(RegistrationRequest request) {
+		
+		return false;
 	}
-	
-	public Object parseInputIntoDocument(File file) throws Exception {
+
+	private Object parseInputIntoDocument(String xmlString) throws Exception {
 		DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();  
-		Document document = documentBuilder.parse(file);  
+		Document document = documentBuilder.parse(xmlString);  
+		File file = new File(xmlString);
 		switch(document.getDocumentElement().getNodeName()) {
 		case "registration":
 			return unMarshallRegistrationRequest(file);
@@ -46,6 +74,8 @@ public class Service {
 			return unMarshallStatsRequest(file);
 		case "statsResponse":
 			return unMarshallStatsResponse(file);
+		case "xmlDB":
+			
 		default:
 			return null;
 		}
@@ -134,4 +164,14 @@ public class Service {
 		}
 		return null;
 	}
+
+	public boolean isStopSending() {
+		return stopSending;
+	}
+
+	public void setStopSending(boolean stopSending) {
+		this.stopSending = stopSending;
+	}
+	
+	
 }
