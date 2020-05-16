@@ -41,8 +41,7 @@ public class ServidorTCPConcorrente {
 
                 // Espera connect do cliente
                 newSock = serverSocket.accept(); 
-
-                Thread th = new HandleConnectionThread(newSock);
+                Thread th = new Service(newSock);
                 th.start();
             }
         } 
@@ -53,75 +52,3 @@ public class ServidorTCPConcorrente {
 
 } // end ServidorTCP
 
-
-
-class HandleConnectionThread extends Thread {
-
-    private Socket connection;
-    private BufferedReader is = null;
-    private PrintWriter os    = null;
-
-    public HandleConnectionThread(Socket connection) {
-        this.connection = connection;
-    }
-
-
-    public void run() {
-
-        
-
-        try {
-            // circuito virtual estabelecido: socket cliente na variavel newSock
-            System.out.println("Thread " + this.getId() + ": " + connection.getRemoteSocketAddress());
-
-            is = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-            os = new PrintWriter(connection.getOutputStream(), true);
-
-            String inputLine = is.readLine(); 
-            Service s = new Service();
-            Thread t = new Thread(s);
-     
-        }
-        catch (IOException e) {
-            System.err.println("erro na liga�ao " + connection + ": " + e.getMessage());
-        }
-        finally {
-            // garantir que o socket � fechado
-            try {
-                if (is != null) is.close();  
-                if (os != null) os.close();
-
-                if (connection != null) connection.close();                    
-            } catch (IOException e) { } 
-        }
-    } // end run
-    
-    public void post(String out) {
-		// Escreve no socket
-        os.println(out);
-	}
-	
-	public void clear() {
-		os.flush();
-	}
-	
-	public String get() {
-		String in = "";
-		try { in = (String) is.readLine(); }
-		catch (IOException e) {}
-		return in;
-	}
-	
-	public void closeChannel() {
-		try {
-			os.close(); 
-			is.close();
-			connection.close();
-		}
-		catch (IOException e) { 
-			 e.printStackTrace(); 
-		}
-	}
-
-} // end HandleConnectionThread
