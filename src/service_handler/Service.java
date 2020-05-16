@@ -32,7 +32,7 @@ public class Service extends Thread{
 			String xmlString = get();
 			Object requestObject = parseInputIntoDocument(xmlString);
 			
-			if(requestObject instanceof RegistrationRequest) {
+			if(requestObject.getClass().getn instanceof RegistrationRequest) {
 				registerNewUserIfPossible((RegistrationRequest)requestObject);
 			} else if() {
 				

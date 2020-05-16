@@ -41,11 +41,13 @@ public class ServidorTCPConcorrente {
             for( ; ; ) {
                 System.out.println("Servidor TCP concorrente aguarda ligacao no porto " + port + "..." );
 
+                
                 // Espera connect do cliente
+                // asda
                 newSock = serverSocket.accept(); 
                 Thread th = new Service(newSock);
                 th.start();
-            }
+            } 
         } 
         catch (IOException e) {
             System.err.println("Excep��o no servidor: " + e);
