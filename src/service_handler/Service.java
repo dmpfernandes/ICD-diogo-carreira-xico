@@ -1,18 +1,22 @@
 package service_handler;
 
 import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
+import messages.LoginRequest;
+import messages.LoginResponse;
 import messages.RegistrationRequest;
 import messages.RegistrationResponse;
 import messages.RequestQuestionRequest;
 import messages.RequestQuestionResponse;
+import messages.ResultState;
 import messages.SendAnswerRequest;
 import messages.SendAnswerResponse;
 import messages.StatsRequest;
 import messages.StatsResponse;
-import messages.User;
-import messages.XmlDB;
-import messages.XmlDatabase;
+import models.User;
+import models.Users;
+import models.XmlDB;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -20,12 +24,16 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 
 public class Service extends Thread{
 	
 	private boolean stopSending = false;
 	private Socket socket;
+	private static HashMap<Integer, String> loggedUsers = new HashMap<Integer, String>();
 	
 	public Service(Socket socket) {
 		this.socket = socket;
@@ -40,43 +48,117 @@ public class Service extends Thread{
 			String requestName = requestObject.getClass().getName();
 			switch(requestName) {
 			case "RegistrationRequest":
-				registerNewUserIfPossible((RegistrationRequest)requestObject, xmlDatabase);
+				RegistrationResponse registrationResponse = registerNewUserIfPossible((RegistrationRequest)requestObject, xmlDatabase);
+				post(registrationResponse);
+				break;
+			case "LoginRequest":
+				if(loginDataCorrect((LoginRequest) requestObject, xmlDatabase)) {
+					LoginResponse loginResponse = executeLogin((LoginRequest) requestObject, xmlDatabase);
+				} else {
+					LoginResponse loginResponse = new LoginResponse();
+					ResultState resultState = generateResultState(404, "Wrong credentials or user is unregistered.");
+					loginResponse.setResultState(resultState);
+				}
+				
+				post(loginResponse);
 				break;
 			}
 
 		}
 	}
+
+	private ResultState generateResultState(int state, String description) {
+		ResultState resultState = new ResultState();
+		resultState.setDescription(description);
+		resultState.setState(state);
+		return resultState;
+	}
 			
-	private XmlDB unMarshallXmlDataBase(File xmlFile) {
-		// TODO Auto-generated method stub
+	private LoginResponse executeLogin(LoginRequest requestObject, XmlDB xmlDatabase) {
+		User user = getUserByUsername(requestObject.getUsername(), xmlDatabase);
+		loggedUsers.put(getSessionNumberByUserID(user.getIdUser()) , user.getRole());
+		LoginResponse loginResponse = new LoginResponse();
+		loginResponse
+		return null;		
+	}
+
+	private boolean loginDataCorrect(LoginRequest requestObject, XmlDB xmlDatabase) {
+		if(usernameExists(requestObject.getUsername(), xmlDatabase)) {
+			if(correctPassword(requestObject, xmlDatabase)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean correctPassword(LoginRequest requestObject, XmlDB xmlDatabase) {
+		Optional<User> user = xmlDatabase.getUsers().getUser().stream().filter(u -> u.getUsername().equals(requestObject.getUsername())).findFirst();
+		if(user.isPresent()) {
+			boolean success = (user.get().getPassword().equals(requestObject.getPassword()) ? true : false);
+			return success;
+		} else return false;
+	}
+
+	private boolean usernameExists(String username, XmlDB xmlDatabase) {
+		long count = xmlDatabase.getUsers().getUser().stream().filter(u -> u.getUsername().equals(username)).count();
+		if(count == 1L) {
+			return true;
+		} else return false;
+	}
+
+	private XmlDB unMarshallXmlDataBase(File xmlFile) {		
+		DocumentBuilder documentBuilder;
+		try {
+			documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document document = documentBuilder.parse(xmlFile);  
+			Node node = document.getDocumentElement().cloneNode(true);
+			
+			JAXBContext jaxbContext = JAXBContext.newInstance(XmlDB.class);  
+	        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();  
+	        XmlDB request= (XmlDB) jaxbUnmarshaller.unmarshal(node);  
+	        
+	        return request;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
-	private void registerNewUserIfPossible(RegistrationRequest request, XmlDB xmlDatabase) {
+	private RegistrationResponse registerNewUserIfPossible(RegistrationRequest request, XmlDB xmlDatabase) {
+		RegistrationResponse response = new RegistrationResponse();
 		if(canRegisterUser(request, xmlDatabase)) {
 			addNewUser(request, xmlDatabase);
-		} else return;
+			response.setResultState(generateResultState(200, "Registration complete!"));
+		} else {
+			response.setResultState(generateResultState(400, "Validation failed, please try again."));
+		}
+		return response;
 	}
 	
 	private boolean canRegisterUser(RegistrationRequest request, XmlDB xmlDatabase) {
-		List<User> users = xmlDatabase.getUsers();
-		if(users.stream().filter(u -> u.getUsername().equals(request.getUsername())).count() == 0) {
+		Users users = xmlDatabase.getUsers();
+		if(users.getUser().stream().filter(u -> u.getUsername().equals(request.getUsername())).count() == 0) {
 			return true;
 		} else return false;
 	}
 	
 	private void addNewUser(RegistrationRequest request, XmlDB xmlDatabase) {
-		List<User> users = xmlDatabase.getUsers();
+		Users users = xmlDatabase.getUsers();
 		User newUser = new User();
 		newUser.setBirthDate(request.getDateOfBirth());
 		newUser.setName(request.getName());
 		newUser.setEmail(request.getEmail());
 		newUser.setPassword(request.getPassword());
 		newUser.setIdUser();
-		newUser.setRole(value);
 		newUser.setUsername(request.getUsername());
+		if(request.getEmail().contains("alunos")) {
+			newUser.setRole("student");
+		} else if(request.getEmail().contains("docentes")) {
+			newUser.setRole("teacher");
+		}
 
-		users.add(newUser);
+		users.getUser().add(newUser);
 		xmlDatabase.setUsers(users);
 		
 	}
@@ -86,34 +168,32 @@ public class Service extends Thread{
 	private Object parseInputIntoDocument(String xmlString) throws Exception {
 		DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();  
 		Document document = documentBuilder.parse(xmlString);  
-		File file = new File("new_file");
-		FileWriter fw = new FileWriter(file);
-		fw.write(xmlString);
+		Node node = document.getDocumentElement().cloneNode(true);
 		switch(document.getDocumentElement().getNodeName()) {
 		case "registration":
-			return unMarshallRegistrationRequest(file);
+			return unMarshallRegistrationRequest(node);
 		case "requestQuestionRequest":
-			return unMarshallRequestQuestionRequest(file);
+			return unMarshallRequestQuestionRequest(node);
 		case "requestQuestionResponse":
-			return unMarshallRequestQuestionResponse(file);
+			return unMarshallRequestQuestionResponse(node);
 		case "sendAnswerRequest":
-			return unMarshallSendAnswerRequest(file);
+			return unMarshallSendAnswerRequest(node);
 		case "sendAnswerResponse":
-			return unMarshallSendAnswerResponse(file);
+			return unMarshallSendAnswerResponse(node);
 		case "statsRequest":
-			return unMarshallStatsRequest(file);
+			return unMarshallStatsRequest(node);
 		case "statsResponse":
-			return unMarshallStatsResponse(file);
+			return unMarshallStatsResponse(node);
 		default:
 			return null;
 		}
 	}
 
-	private StatsResponse unMarshallStatsResponse(File file) {
+	private StatsResponse unMarshallStatsResponse(Node node) {
 		try {  
 	        JAXBContext jaxbContext = JAXBContext.newInstance(StatsResponse.class);  
 	        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();  
-	        StatsResponse request= (StatsResponse) jaxbUnmarshaller.unmarshal(file);  
+	        StatsResponse request= (StatsResponse) jaxbUnmarshaller.unmarshal(node);  
 	        return request;
 		} catch(JAXBException e) {
 	        e.printStackTrace();
@@ -121,11 +201,11 @@ public class Service extends Thread{
 		return null;
 	}
 
-	private StatsRequest unMarshallStatsRequest(File file) {
+	private StatsRequest unMarshallStatsRequest(Node node) {
 		try {  
 	        JAXBContext jaxbContext = JAXBContext.newInstance(StatsRequest.class);  
 	        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();  
-	        StatsRequest request= (StatsRequest) jaxbUnmarshaller.unmarshal(file);  
+	        StatsRequest request= (StatsRequest) jaxbUnmarshaller.unmarshal(node);  
 	        return request;
 		} catch(JAXBException e) {
 	        e.printStackTrace();
@@ -133,11 +213,11 @@ public class Service extends Thread{
 		return null;
 	}
 
-	private SendAnswerResponse unMarshallSendAnswerResponse(File file) {
+	private SendAnswerResponse unMarshallSendAnswerResponse(Node node) {
 		try {  
 	        JAXBContext jaxbContext = JAXBContext.newInstance(SendAnswerResponse.class);  
 	        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();  
-	        SendAnswerResponse request= (SendAnswerResponse) jaxbUnmarshaller.unmarshal(file);  
+	        SendAnswerResponse request= (SendAnswerResponse) jaxbUnmarshaller.unmarshal(node);  
 	        return request;
 		} catch(JAXBException e) {
 	        e.printStackTrace();
@@ -145,11 +225,11 @@ public class Service extends Thread{
 		return null;
 	}
 
-	private SendAnswerRequest unMarshallSendAnswerRequest(File file) {
+	private SendAnswerRequest unMarshallSendAnswerRequest(Node node) {
 		try {  
 	        JAXBContext jaxbContext = JAXBContext.newInstance(SendAnswerRequest.class);  
 	        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();  
-	        SendAnswerRequest request= (SendAnswerRequest) jaxbUnmarshaller.unmarshal(file);  
+	        SendAnswerRequest request= (SendAnswerRequest) jaxbUnmarshaller.unmarshal(node);  
 	        return request;
 		} catch(JAXBException e) {
 	        e.printStackTrace();
@@ -157,11 +237,11 @@ public class Service extends Thread{
 		return null;
 	}
 
-	private RequestQuestionResponse unMarshallRequestQuestionResponse(File file) {
+	private RequestQuestionResponse unMarshallRequestQuestionResponse(Node node) {
 		try {  
 	        JAXBContext jaxbContext = JAXBContext.newInstance(RequestQuestionResponse.class);  
 	        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();  
-	        RequestQuestionResponse request= (RequestQuestionResponse) jaxbUnmarshaller.unmarshal(file);  
+	        RequestQuestionResponse request= (RequestQuestionResponse) jaxbUnmarshaller.unmarshal(node);  
 	        return request;
 		} catch(JAXBException e) {
 	        e.printStackTrace();
@@ -169,11 +249,11 @@ public class Service extends Thread{
 		return null;
 	}
 
-	private RequestQuestionRequest unMarshallRequestQuestionRequest(File file) {
+	private RequestQuestionRequest unMarshallRequestQuestionRequest(Node node) {
 		try {  
 	        JAXBContext jaxbContext = JAXBContext.newInstance(RequestQuestionRequest.class);  
 	        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();  
-	        RequestQuestionRequest request= (RequestQuestionRequest) jaxbUnmarshaller.unmarshal(file);  
+	        RequestQuestionRequest request= (RequestQuestionRequest) jaxbUnmarshaller.unmarshal(node);  
 	        return request;
 		} catch(JAXBException e) {
 	        e.printStackTrace();
@@ -181,11 +261,11 @@ public class Service extends Thread{
 		return null;
 	}
 
-	private RegistrationRequest unMarshallRegistrationRequest(File file) {
+	private RegistrationRequest unMarshallRegistrationRequest(Node node) {
 		try {  
 	        JAXBContext jaxbContext = JAXBContext.newInstance(RegistrationRequest.class);  
 	        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();  
-	        RegistrationRequest request= (RegistrationRequest) jaxbUnmarshaller.unmarshal(file);  
+	        RegistrationRequest request= (RegistrationRequest) jaxbUnmarshaller.unmarshal(node);  
 	        return request;
 		} catch(JAXBException e) {
 	        e.printStackTrace();
