@@ -10,6 +10,9 @@ import messages.SendAnswerRequest;
 import messages.SendAnswerResponse;
 import messages.StatsRequest;
 import messages.StatsResponse;
+import messages.User;
+import messages.XmlDB;
+import messages.XmlDatabase;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -17,6 +20,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
 
 public class Service extends Thread{
 	
@@ -28,37 +32,63 @@ public class Service extends Thread{
 	}
 	
 	public void run() {
+		File xmlFile = new File("xml/xmlDB.xml");
+		XmlDB xmlDatabase = unMarshallXmlDataBase(xmlFile);
 		while(!stopSending) {
 			String xmlString = get();
 			Object requestObject = parseInputIntoDocument(xmlString);
-			
-			if(requestObject.getClass().getn instanceof RegistrationRequest) {
-				registerNewUserIfPossible((RegistrationRequest)requestObject);
-			} else if() {
-				
+			String requestName = requestObject.getClass().getName();
+			switch(requestName) {
+			case "RegistrationRequest":
+				registerNewUserIfPossible((RegistrationRequest)requestObject, xmlDatabase);
+				break;
 			}
+
 		}
 	}
 			
-	private void registerNewUserIfPossible(RegistrationRequest request) {
-		if(canRegisterUser(request)) {
-			addNewUser(request);
-		}
+	private XmlDB unMarshallXmlDataBase(File xmlFile) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	private void addNewUser(RegistrationRequest request) {
+	private void registerNewUserIfPossible(RegistrationRequest request, XmlDB xmlDatabase) {
+		if(canRegisterUser(request, xmlDatabase)) {
+			addNewUser(request, xmlDatabase);
+		} else return;
+	}
+	
+	private boolean canRegisterUser(RegistrationRequest request, XmlDB xmlDatabase) {
+		List<User> users = xmlDatabase.getUsers();
+		if(users.stream().filter(u -> u.getUsername().equals(request.getUsername())).count() == 0) {
+			return true;
+		} else return false;
+	}
+	
+	private void addNewUser(RegistrationRequest request, XmlDB xmlDatabase) {
+		List<User> users = xmlDatabase.getUsers();
+		User newUser = new User();
+		newUser.setBirthDate(request.getDateOfBirth());
+		newUser.setName(request.getName());
+		newUser.setEmail(request.getEmail());
+		newUser.setPassword(request.getPassword());
+		newUser.setIdUser();
+		newUser.setRole(value);
+		newUser.setUsername(request.getUsername());
+
+		users.add(newUser);
+		xmlDatabase.setUsers(users);
 		
 	}
 
-	private boolean canRegisterUser(RegistrationRequest request) {
-		
-		return false;
-	}
+	
 
 	private Object parseInputIntoDocument(String xmlString) throws Exception {
 		DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();  
 		Document document = documentBuilder.parse(xmlString);  
-		File file = new File(xmlString);
+		File file = new File("new_file");
+		FileWriter fw = new FileWriter(file);
+		fw.write(xmlString);
 		switch(document.getDocumentElement().getNodeName()) {
 		case "registration":
 			return unMarshallRegistrationRequest(file);
@@ -74,8 +104,6 @@ public class Service extends Thread{
 			return unMarshallStatsRequest(file);
 		case "statsResponse":
 			return unMarshallStatsResponse(file);
-		case "xmlDB":
-			
 		default:
 			return null;
 		}
