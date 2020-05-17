@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.xml.bind.JAXBContext;
@@ -115,16 +117,16 @@ public class ClienteSimplesTCP {
 				teacherMenu(sc,state);
 				break;
 			case 4:
-				studentMenu(sc,state);
+//				studentMenu(sc,state);
 				break;
 			case 5:
 				addQuestionMenu(sc,state);
 				break;
 			case 6:
-				sendQuestionMenu(sc,state);
+//				sendQuestionMenu(sc,state);
 				break;
 			case 7:
-				statsMenu(sc,state);
+//				statsMenu(sc,state);
 				break;
 			default:
 				break;
@@ -280,10 +282,21 @@ public class ClienteSimplesTCP {
     	
     	System.out.println("**********************");
     	System.out.println("* Adicionar Pergunta *");
-    	System.out.println("* 1- + Pergunta      *");
-    	System.out.println("* 2- Envia Pergunta  *");
-    	System.out.println("* 3- Estatisticas    *");
+    	System.out.println("*1-Corpo da pergunta *");
+    	String question = sc.next();
+    	System.out.println("*2-Nº de Respostas   *");
+    	int numOfAnswers = sc.nextInt();
+    	List<String> answers = new ArrayList<String>();
+    	for (int i = 0; i < numOfAnswers; i++) {
+    		System.out.println("*"+i+1+"- Resposta     *");
+    		answers.add(sc.next());
+    		System.out.println("* - Validade     *");
+    		answers.add(sc.next());
+		}
     	System.out.println("**********************");
+    	
+    	
+    	
     }
     
     private static void resultMenu(ResultState obj) {

@@ -22,8 +22,8 @@
         <xs:element ref="questionBody"/>
         <xs:element ref="answers"/>
       </xs:sequence>
-      <xs:attribute type="xs:byte" name="idQ" use="optional"/>
-      <xs:attribute type="xs:byte" name="refIdUser" use="optional"/>
+      <xs:attribute type="xs:int" name="idQ" use="optional"/>
+      <xs:attribute type="xs:int" name="refIdUser" use="optional"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="name" type="xs:string"/>
@@ -40,7 +40,7 @@
         <xs:element ref="birthDate"/>
         <xs:element ref="password"/>
       </xs:sequence>
-      <xs:attribute type="xs:byte" name="idUser" use="optional"/>
+      <xs:attribute type="xs:int" name="idUser" use="optional"/>
       <xs:attribute type="xs:string" name="role" use="optional"/>
     </xs:complexType>
   </xs:element>
@@ -48,7 +48,7 @@
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="xs:string">
-          <xs:attribute type="xs:byte" name="numOfCorrectAnswers" use="optional"/>
+          <xs:attribute type="xs:int" name="numOfCorrectAnswers" use="optional"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
@@ -57,7 +57,7 @@
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base="xs:string">
-          <xs:attribute type="xs:byte" name="numOfWrongAnswers" use="optional"/>
+          <xs:attribute type="xs:int" name="numOfWrongAnswers" use="optional"/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
@@ -68,12 +68,12 @@
         <xs:element ref="correctAnswer"/>
         <xs:element ref="wrongAnswer"/>
       </xs:sequence>
-      <xs:attribute type="xs:byte" name="idQAsked" use="optional"/>
-      <xs:attribute type="xs:byte" name="refIdQ" use="optional"/>
+      <xs:attribute type="xs:int" name="idQAsked" use="optional"/>
+      <xs:attribute type="xs:int" name="refIdQ" use="optional"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="numOfQuestionsAsked" type="xs:byte"/>
-  <xs:element name="numOfQuestionsAnswered" type="xs:byte"/>
+  <xs:element name="numOfQuestionsAsked" type="xs:int"/>
+  <xs:element name="numOfQuestionsAnswered" type="xs:int"/>
   <xs:element name="questionsAsked">
     <xs:complexType>
       <xs:sequence>
@@ -88,8 +88,8 @@
         <xs:element ref="numOfQuestionsAnswered"/>
         <xs:element ref="questionsAsked"/>
       </xs:sequence>
-      <xs:attribute type="xs:byte" name="idS" use="optional"/>
-      <xs:attribute type="xs:byte" name="refIdUser" use="optional"/>
+      <xs:attribute type="xs:int" name="idS" use="optional"/>
+      <xs:attribute type="xs:int" name="refIdUser" use="optional"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="questions">

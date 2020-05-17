@@ -35,9 +35,23 @@ public class Service extends Thread{
 	private boolean stopSending = false;
 	private Socket socket;
 	private static HashMap<Integer, String> loggedUsers = new HashMap<Integer, String>();
+	private BufferedReader is = null;
+    private PrintWriter os = null;
 	
 	public Service(Socket socket) {
 		this.socket = socket;
+		 
+        try {
+        	// Stream para escrita no socket
+			os = new PrintWriter(this.socket.getOutputStream(), true);
+			// Stream para leitura do socket
+	        is = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+
+        
 	}
 	
 	public void run() {
@@ -45,7 +59,13 @@ public class Service extends Thread{
 		XmlDB xmlDatabase = unMarshallXmlDataBase(xmlFile);
 		while(!stopSending) {
 			String xmlString = get();
-			Object requestObject = parseInputIntoDocument(xmlString);
+			Object requestObject = null;
+			try {
+				requestObject = parseInputIntoDocument(xmlString);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			String requestName = requestObject.getClass().getName();
 			switch(requestName) {
 			case "RegistrationRequest":
@@ -129,7 +149,7 @@ public class Service extends Thread{
 		
 	}
 	
-	private Integer getSessionNumberByUserID(Byte idUser) {
+	private Integer getSessionNumberByUserID(int idUser) {
 		return null;
 	}
 	private boolean loginDataCorrect(LoginRequest requestObject, XmlDB xmlDatabase) {
@@ -200,7 +220,7 @@ public class Service extends Thread{
 		newUser.setName(request.getName());
 		newUser.setEmail(request.getEmail());
 		newUser.setPassword(request.getPassword());
-		newUser.setIdUser();
+		newUser.setIdUser(0);
 		newUser.setUsername(request.getUsername());
 		if(request.getEmail().contains("alunos")) {
 			newUser.setRole("student");
@@ -216,12 +236,23 @@ public class Service extends Thread{
 	
 
 	private Object parseInputIntoDocument(String xmlString) throws Exception {
-		DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();  
-		Document document = documentBuilder.parse(xmlString);  
-		Node node = document.getDocumentElement().cloneNode(true);
-		switch(document.getDocumentElement().getNodeName()) {
-		case "registration":
+		Element node = null;
+		try {
+			node = DocumentBuilderFactory
+				    .newInstance()
+				    .newDocumentBuilder()
+				    .parse(new ByteArrayInputStream(xmlString.getBytes()))
+				    .getDocumentElement();
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(node.getNodeName());
+		switch(node.getNodeName()) {
+		case "registrationRequest":
 			return unMarshallRegistrationRequest(node);
+		case "registrationResponse":
+			return unMarshallRegistrationResponse(node);
 		case "requestQuestionRequest":
 			return unMarshallRequestQuestionRequest(node);
 		case "requestQuestionResponse":
@@ -330,6 +361,33 @@ public class Service extends Thread{
 	public void setStopSending(boolean stopSending) {
 		this.stopSending = stopSending;
 	}
+	
+	 private void post(String out) {
+			// Escreve no socket
+	        os.println(out);
+		}
+		
+	 private void clear() {
+			os.flush();
+		}
+		
+	 private String get() {
+			String in = "";
+			try { in = (String) is.readLine(); }
+			catch (IOException e) {}
+			return in;
+		}
+		
+	 private void closeChannel() {
+			try {
+				os.close(); 
+				is.close();
+				socket.close();
+			}
+			catch (IOException e) { 
+				 e.printStackTrace(); 
+			}
+		}
 	
 	
 }
