@@ -62,6 +62,7 @@ public class Service extends Thread{
 				
 				post(loginResponse);
 				break;
+				
 			}
 
 		}
@@ -75,13 +76,28 @@ public class Service extends Thread{
 	}
 			
 	private LoginResponse executeLogin(LoginRequest requestObject, XmlDB xmlDatabase) {
-		User user = getUserByUsername(requestObject.getUsername(), xmlDatabase);
-		loggedUsers.put(getSessionNumberByUserID(user.getIdUser()) , user.getRole());
+		Optional<User> optUser = getUserByUsername(requestObject.getUsername(), xmlDatabase);
 		LoginResponse loginResponse = new LoginResponse();
-		loginResponse
-		return null;		
+		if(optUser.isPresent()) {
+			User user = optUser.get();
+			loggedUsers.put(getSessionNumberByUserID(user.getIdUser()) , user.getRole());
+			
+			loginResponse.setResultState(generateResultState(200, "Login Successful"));
+		} else {
+			loginResponse.setResultState(generateResultState(400, "Login Failed, user doesn't exist"));
+		}
+		
+		return loginResponse;		
 	}
 
+	private Optional<User> getUserByUsername(String username, XmlDB xmlDatabase) {
+		return xmlDatabase.getUsers().getUser().stream().filter(u -> u.getUsername().equals(username)).findFirst();
+		
+	}
+	
+	private Integer getSessionNumberByUserID(Byte idUser) {
+		return null;
+	}
 	private boolean loginDataCorrect(LoginRequest requestObject, XmlDB xmlDatabase) {
 		if(usernameExists(requestObject.getUsername(), xmlDatabase)) {
 			if(correctPassword(requestObject, xmlDatabase)) {
@@ -92,7 +108,7 @@ public class Service extends Thread{
 	}
 
 	private boolean correctPassword(LoginRequest requestObject, XmlDB xmlDatabase) {
-		Optional<User> user = xmlDatabase.getUsers().getUser().stream().filter(u -> u.getUsername().equals(requestObject.getUsername())).findFirst();
+		Optional<User> user = getUserByUsername(requestObject.getUsername(), xmlDatabase);
 		if(user.isPresent()) {
 			boolean success = (user.get().getPassword().equals(requestObject.getPassword()) ? true : false);
 			return success;
