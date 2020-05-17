@@ -12,6 +12,17 @@
 				</answer>
 			</answers>
 		</question>
+		<question idQ="1" refIdUser="1">
+			<questionBody>{String}</questionBody>
+			<answers>
+				<answer bool="true">
+					<answerBody>{String}</answerBody>
+				</answer>
+				<answer bool="true">
+					<answerBody>{String}</answerBody>
+				</answer>
+			</answers>
+		</question>
 	</questions>
 	<users>
 		<user idUser="0" role="Teacher">
@@ -21,9 +32,26 @@
 			<birthDate>{String}</birthDate>
 			<password>{String}</password>
 		</user>
+		<user idUser="1" role="student">
+			<name>{String}</name>
+			<username>{String}</username>
+			<email>{String}</email>
+			<birthDate>{String}</birthDate>
+			<password>{String}</password>
+		</user>
 	</users>
 	<stats>
 		<session idS="0" refIdUser="0">
+			<numOfQuestionsAsked>0</numOfQuestionsAsked>
+			<numOfQuestionsAnswered>0</numOfQuestionsAnswered>
+			<questionsAsked>
+				<qAsked idQAsked="0" refIdQ="0">
+					<correctAnswer numOfCorrectAnswers="0">{List(string)}</correctAnswer>
+					<wrongAnswer numOfWrongAnswers="0">{List(string)}</wrongAnswer>
+				</qAsked>
+			</questionsAsked>
+		</session>
+		<session idS="1" refIdUser="1">
 			<numOfQuestionsAsked>0</numOfQuestionsAsked>
 			<numOfQuestionsAnswered>0</numOfQuestionsAnswered>
 			<questionsAsked>
