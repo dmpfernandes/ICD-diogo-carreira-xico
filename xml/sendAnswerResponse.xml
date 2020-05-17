@@ -4,4 +4,5 @@
 		<state>100</state>
 		<description>Description</description>
 	</resultState>
+	<result>string</result>
 </sendAnswerResponse>

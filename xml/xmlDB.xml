@@ -1,65 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmlDB xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="xmlDB.xsd">
-	<questions>
-		<question idQ="0" refIdUser="0">
-			<questionBody>{String}</questionBody>
-			<answers>
-				<answer bool="true">
-					<answerBody>{String}</answerBody>
-				</answer>
-				<answer bool="true">
-					<answerBody>{String}</answerBody>
-				</answer>
-			</answers>
-		</question>
-		<question idQ="1" refIdUser="1">
-			<questionBody>{String}</questionBody>
-			<answers>
-				<answer bool="true">
-					<answerBody>{String}</answerBody>
-				</answer>
-				<answer bool="true">
-					<answerBody>{String}</answerBody>
-				</answer>
-			</answers>
-		</question>
-	</questions>
-	<users>
-		<user idUser="0" role="Teacher">
-			<name>{String}</name>
-			<username>{String}</username>
-			<email>{String}</email>
-			<birthDate>{String}</birthDate>
-			<password>{String}</password>
-		</user>
-		<user idUser="1" role="student">
-			<name>{String}</name>
-			<username>{String}</username>
-			<email>{String}</email>
-			<birthDate>{String}</birthDate>
-			<password>{String}</password>
-		</user>
-	</users>
-	<stats>
-		<session idS="0" refIdUser="0">
-			<numOfQuestionsAsked>0</numOfQuestionsAsked>
-			<numOfQuestionsAnswered>0</numOfQuestionsAnswered>
-			<questionsAsked>
-				<qAsked idQAsked="0" refIdQ="0">
-					<correctAnswer numOfCorrectAnswers="0">{List(string)}</correctAnswer>
-					<wrongAnswer numOfWrongAnswers="0">{List(string)}</wrongAnswer>
-				</qAsked>
-			</questionsAsked>
-		</session>
-		<session idS="1" refIdUser="1">
-			<numOfQuestionsAsked>0</numOfQuestionsAsked>
-			<numOfQuestionsAnswered>0</numOfQuestionsAnswered>
-			<questionsAsked>
-				<qAsked idQAsked="0" refIdQ="0">
-					<correctAnswer numOfCorrectAnswers="0">{List(string)}</correctAnswer>
-					<wrongAnswer numOfWrongAnswers="0">{List(string)}</wrongAnswer>
-				</qAsked>
-			</questionsAsked>
-		</session>
-	</stats>
-</xmlDB>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="answerBody" type="xs:string"/>
+  <xs:element name="answer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="answerBody"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="bool" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="questionBody" type="xs:string"/>
+  <xs:element name="answers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="answer" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="question">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="questionBody"/>
+        <xs:element ref="answers"/>
+      </xs:sequence>
+      <xs:attribute type="xs:int" name="idQ" use="optional"/>
+      <xs:attribute type="xs:int" name="refIdUser" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="username" type="xs:string"/>
+  <xs:element name="email" type="xs:string"/>
+  <xs:element name="birthDate" type="xs:string"/>
+  <xs:element name="password" type="xs:string"/>
+  <xs:element name="user">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="username"/>
+        <xs:element ref="email"/>
+        <xs:element ref="birthDate"/>
+        <xs:element ref="password"/>
+      </xs:sequence>
+      <xs:attribute type="xs:int" name="idUser" use="optional"/>
+      <xs:attribute type="xs:string" name="role" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="correctAnswer">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:int" name="numOfCorrectAnswers" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="wrongAnswer">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:int" name="numOfWrongAnswers" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="qAsked">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="correctAnswer"/>
+        <xs:element ref="wrongAnswer"/>
+      </xs:sequence>
+      <xs:attribute type="xs:int" name="idQAsked" use="optional"/>
+      <xs:attribute type="xs:int" name="refIdQ" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="numOfQuestionsAsked" type="xs:int"/>
+  <xs:element name="numOfQuestionsAnswered" type="xs:int"/>
+  <xs:element name="questionsAsked">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="qAsked"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="session">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="numOfQuestionsAsked"/>
+        <xs:element ref="numOfQuestionsAnswered"/>
+        <xs:element ref="questionsAsked"/>
+      </xs:sequence>
+      <xs:attribute type="xs:int" name="idS" use="optional"/>
+      <xs:attribute type="xs:int" name="refIdUser" use="optional"/>
+      <xs:attribute type="xs:string" name="dateOfCreation" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="questions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="question" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="users">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="user" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="stats">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="session" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="xmlDB">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="questions"/>
+        <xs:element ref="users"/>
+        <xs:element ref="stats"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

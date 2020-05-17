@@ -3,7 +3,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:element name="requestQuestionRequest">
 		<xs:complexType>
-			<xs:attribute name="refIdUser" type="xs:int" use="required"/>
+			<xs:attribute name="refIdUser" type="xs:int" use="optional"/>
 			<xs:attribute name="refIdQ" type="xs:int" use="required"/>
 			<xs:attribute name="allStudents" type="xs:boolean" use="required"/>
 			<xs:attribute name="sessionNumber" type="xs:int" use="required"/>

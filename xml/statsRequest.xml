@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<statsRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="statsRequest.xsd">
+<statsRequest sessionNumber="888"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="statsRequest.xsd">
 	<whichStat>questionsAsked</whichStat>
+	<dateOfSession>12-02-2345</dateOfSession>
 </statsRequest>

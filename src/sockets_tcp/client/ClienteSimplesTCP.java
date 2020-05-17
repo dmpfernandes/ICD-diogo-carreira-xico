@@ -82,17 +82,17 @@ public class ClienteSimplesTCP {
         catch (IOException e) {
             System.err.println("Erro na liga��o " + e.getMessage());   
         }
-        finally {
-            // No fim de tudo, fechar os streams e o socket
-            try {
-                if (os != null) os.close();
-                if (is != null) is.close();
-                if (socket != null ) socket.close();
-            }
-            catch (IOException e) { 
-                // if an I/O error occurs when closing this socket
-            }
-        } // end finally
+//        finally {
+//            // No fim de tudo, fechar os streams e o socket
+//            try {
+//                if (os != null) os.close();
+//                if (is != null) is.close();
+//                if (socket != null ) socket.close();
+//            }
+//            catch (IOException e) { 
+//                // if an I/O error occurs when closing this socket
+//            }
+//        } // end finally
 
 
     } // end main
@@ -102,16 +102,34 @@ public class ClienteSimplesTCP {
     	Scanner sc = new Scanner(System.in);
     	initialMenu();
     	int state = sc.nextInt();
-    	switch (state) {
-		case 1:
-			registrationMenu(sc);
-			break;
-		case 2:
-			
-			break;
-		default:
-			break;
-		}
+    	boolean run = true;
+    	while(run) {
+	    	switch (state) {
+			case 1:
+				registrationMenu(sc,state);
+				break;
+			case 2:
+				loginMenu(sc,state);
+				break;
+			case 3:
+				teacherMenu(sc,state);
+				break;
+			case 4:
+				studentMenu(sc,state);
+				break;
+			case 5:
+				addQuestionMenu(sc,state);
+				break;
+			case 6:
+				sendQuestionMenu(sc,state);
+				break;
+			case 7:
+				statsMenu(sc,state);
+				break;
+			default:
+				break;
+			}
+    	}
     	
     }
     
@@ -123,7 +141,7 @@ public class ClienteSimplesTCP {
     	System.out.println("**********************");
     }
     
-    private static void registrationMenu(Scanner sc) {
+    private static void registrationMenu(Scanner sc, int state) {
     	
     	System.out.println("**********************");
     	System.out.println("*    Registration    *");
@@ -166,6 +184,10 @@ public class ClienteSimplesTCP {
 				
 				RegistrationResponse objResponse = (RegistrationResponse) jaxbUnmarshaller.unmarshal(node);
 				resultMenu(objResponse.getResultState());
+				if(objResponse.getResultState().getState()== 200) {
+					state = 2;
+				}
+				
 			} catch (SAXException | IOException | ParserConfigurationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -178,9 +200,9 @@ public class ClienteSimplesTCP {
     	
     }
     
-    private static void loginMenu(Scanner sc) {
+    private static void loginMenu(Scanner sc, int state) {
     	System.out.println("**********************");
-    	System.out.println("*    Login    *");
+    	System.out.println("*        Login       *");
     	System.out.println("*  Username          *");
     	String username = sc.next();
     	System.out.println("*  Password          *");
@@ -210,6 +232,13 @@ public class ClienteSimplesTCP {
 				
 				LoginResponse objResponse = (LoginResponse) jaxbUnmarshaller.unmarshal(node);
 				resultMenu(objResponse.getResultState());
+				if(objResponse.getResultState().getState() == 200) {
+					if(objResponse.getRole().equals("teacher")) {
+						state = 3;
+					}else {
+						state = 4;
+					}
+				}
 			} catch (SAXException | IOException | ParserConfigurationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -219,6 +248,37 @@ public class ClienteSimplesTCP {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    }
+    
+    private static void teacherMenu(Scanner sc, int state) {
+    	System.out.println("**********************");
+    	System.out.println("*        Menu        *");
+    	System.out.println("* 1- + Pergunta      *");
+    	System.out.println("* 2- Envia Pergunta  *");
+    	System.out.println("* 3- Estatisticas    *");
+    	System.out.println("**********************");
+    	
+    	int choice = sc.nextInt();
+    	switch (choice) {
+		case 1:
+			state = 5;
+			break;
+		case 2:
+			state = 6;
+			break;
+		case 3:
+			state = 7;
+			break;
+		default:
+			break;
+		}
+    	
+    	
+    }
+    
+    private static void addQuestionMenu(Scanner sc, int state) {
+    	
+    	
     }
     
     private static void resultMenu(ResultState obj) {
