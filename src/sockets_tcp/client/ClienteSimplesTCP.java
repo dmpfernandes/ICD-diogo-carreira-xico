@@ -278,7 +278,12 @@ public class ClienteSimplesTCP {
     
     private static void addQuestionMenu(Scanner sc, int state) {
     	
-    	
+    	System.out.println("**********************");
+    	System.out.println("* Adicionar Pergunta *");
+    	System.out.println("* 1- + Pergunta      *");
+    	System.out.println("* 2- Envia Pergunta  *");
+    	System.out.println("* 3- Estatisticas    *");
+    	System.out.println("**********************");
     }
     
     private static void resultMenu(ResultState obj) {

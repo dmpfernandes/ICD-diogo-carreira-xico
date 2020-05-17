@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="state" type="xs:int"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="resultState">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="state"/>
+        <xs:element ref="description"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="questionID" type="xs:short"/>
+  <xs:element name="addQuestionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="resultState"/>
+        <xs:element ref="questionID"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

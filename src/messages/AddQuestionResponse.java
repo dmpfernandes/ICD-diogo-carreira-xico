@@ -25,8 +25,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{}state"/>
- *         &lt;element ref="{}description"/>
+ *         &lt;element ref="{}resultState"/>
+ *         &lt;element ref="{}questionID"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -37,54 +37,54 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "state",
-    "description"
+    "resultState",
+    "questionID"
 })
-@XmlRootElement(name = "resultState")
-public class ResultState {
+@XmlRootElement(name = "addQuestionResponse")
+public class AddQuestionResponse {
 
-    protected int state;
     @XmlElement(required = true)
-    protected String description;
+    protected ResultState resultState;
+    protected short questionID;
 
     /**
-     * Gets the value of the state property.
-     * 
-     */
-    public int getState() {
-        return state;
-    }
-
-    /**
-     * Sets the value of the state property.
-     * 
-     */
-    public void setState(int value) {
-        this.state = value;
-    }
-
-    /**
-     * Gets the value of the description property.
+     * Gets the value of the resultState property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link ResultState }
      *     
      */
-    public String getDescription() {
-        return description;
+    public ResultState getResultState() {
+        return resultState;
     }
 
     /**
-     * Sets the value of the description property.
+     * Sets the value of the resultState property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link ResultState }
      *     
      */
-    public void setDescription(String value) {
-        this.description = value;
+    public void setResultState(ResultState value) {
+        this.resultState = value;
+    }
+
+    /**
+     * Gets the value of the questionID property.
+     * 
+     */
+    public short getQuestionID() {
+        return questionID;
+    }
+
+    /**
+     * Sets the value of the questionID property.
+     * 
+     */
+    public void setQuestionID(short value) {
+        this.questionID = value;
     }
 
 }

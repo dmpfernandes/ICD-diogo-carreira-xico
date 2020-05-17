@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="answerBody" type="xs:string"/>
+  <xs:element name="answer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="answerBody"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="bool" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="questionBody" type="xs:string"/>
+  <xs:element name="answers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="answer" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addQuestionRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="questionBody"/>
+        <xs:element ref="answers"/>
+      </xs:sequence>
+      <xs:attribute type="xs:short" name="sessionNumer"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

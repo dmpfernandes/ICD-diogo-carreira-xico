@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addQuestionRequest sessionNumer="23423" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="addQuestionRequest.xsd">
+	<questionBody>exemplo</questionBody>
+	<answers>
+        <answer bool="false">
+          <answerBody>string</answerBody>
+        </answer>
+        <answer bool="false">
+          <answerBody>string</answerBody>
+        </answer>
+        <answer bool="true">
+          <answerBody>string</answerBody>
+        </answer>
+    </answers>
+</addQuestionRequest>
