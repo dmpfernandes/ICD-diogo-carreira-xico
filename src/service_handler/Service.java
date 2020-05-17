@@ -20,6 +20,7 @@ import models.XmlDB;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.*;
 import java.io.*;
@@ -49,23 +50,56 @@ public class Service extends Thread{
 			switch(requestName) {
 			case "RegistrationRequest":
 				RegistrationResponse registrationResponse = registerNewUserIfPossible((RegistrationRequest)requestObject, xmlDatabase);
-				post(registrationResponse);
+				String strRegistrationResponse = marshallRegistrationResponse(registrationResponse);
+
+				post(strRegistrationResponse);
 				break;
 			case "LoginRequest":
+				LoginResponse loginResponse = new LoginResponse();
 				if(loginDataCorrect((LoginRequest) requestObject, xmlDatabase)) {
-					LoginResponse loginResponse = executeLogin((LoginRequest) requestObject, xmlDatabase);
+					 loginResponse = executeLogin((LoginRequest) requestObject, xmlDatabase);
 				} else {
-					LoginResponse loginResponse = new LoginResponse();
 					ResultState resultState = generateResultState(404, "Wrong credentials or user is unregistered.");
 					loginResponse.setResultState(resultState);
 				}
 				
-				post(loginResponse);
+				String strLoginResponse = marshallLoginResponse(loginResponse);
+				post(strLoginResponse);
 				break;
 				
 			}
 
 		}
+	}
+
+	private String marshallRegistrationResponse(RegistrationResponse registrationResponse) {
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance( RegistrationResponse.class );
+			Marshaller jaxbMarshaller;
+			jaxbMarshaller = jaxbContext.createMarshaller();
+			StringWriter sw = new StringWriter();
+	    	jaxbMarshaller.marshal(registrationResponse, sw);
+	    	return sw.toString();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private String marshallLoginResponse(LoginResponse loginResponse) {
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance( LoginResponse.class );
+			Marshaller jaxbMarshaller;
+			jaxbMarshaller = jaxbContext.createMarshaller();
+			StringWriter sw = new StringWriter();
+	    	jaxbMarshaller.marshal(loginResponse, sw);
+	    	return sw.toString();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	private ResultState generateResultState(int state, String description) {
