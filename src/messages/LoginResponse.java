@@ -25,8 +25,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{}state"/>
- *         &lt;element ref="{}description"/>
+ *         &lt;element ref="{}resultState"/>
+ *         &lt;element ref="{}role"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -37,54 +37,63 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "state",
-    "description"
+    "resultState",
+    "role"
 })
-@XmlRootElement(name = "resultState")
-public class ResultState {
+@XmlRootElement(name = "loginResponse")
+public class LoginResponse {
 
-    protected byte state;
     @XmlElement(required = true)
-    protected String description;
+    protected ResultState resultState;
+    @XmlElement(required = true)
+    protected String role;
 
     /**
-     * Gets the value of the state property.
+     * Gets the value of the resultState property.
      * 
+     * @return
+     *     possible object is
+     *     {@link ResultState }
+     *     
      */
-    public byte getState() {
-        return state;
+    public ResultState getResultState() {
+        return resultState;
     }
 
     /**
-     * Sets the value of the state property.
+     * Sets the value of the resultState property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link ResultState }
+     *     
      */
-    public void setState(byte value) {
-        this.state = value;
+    public void setResultState(ResultState value) {
+        this.resultState = value;
     }
 
     /**
-     * Gets the value of the description property.
+     * Gets the value of the role property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getDescription() {
-        return description;
+    public String getRole() {
+        return role;
     }
 
     /**
-     * Sets the value of the description property.
+     * Sets the value of the role property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setDescription(String value) {
-        this.description = value;
+    public void setRole(String value) {
+        this.role = value;
     }
 
 }

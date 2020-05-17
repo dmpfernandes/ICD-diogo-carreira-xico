@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<loginResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="loginResponse.xsd">
+	<resultState>
+		<state>100</state>
+		<description>Descriptio</description>
+	</resultState>
+	<role>string</role>
+</loginResponse>

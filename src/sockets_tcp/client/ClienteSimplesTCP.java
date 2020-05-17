@@ -1,6 +1,7 @@
 package sockets_tcp.client;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -13,9 +14,17 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
+import messages.LoginRequest;
+import messages.LoginResponse;
 import messages.RegistrationRequest;
 import messages.RegistrationResponse;
+import messages.ResultState;
 
 
 
@@ -147,6 +156,20 @@ public class ClienteSimplesTCP {
 	    	String response = get();
 	    	jaxbContext = JAXBContext.newInstance( RegistrationResponse.class );
 	    	Unmarshaller jaxbUnmarshaller   = jaxbContext.createUnmarshaller();
+	    	Element node;
+			try {
+				node = DocumentBuilderFactory
+					    .newInstance()
+					    .newDocumentBuilder()
+					    .parse(new ByteArrayInputStream(response.getBytes()))
+					    .getDocumentElement();
+				
+				RegistrationResponse objResponse = (RegistrationResponse) jaxbUnmarshaller.unmarshal(node);
+				resultMenu(objResponse.getResultState());
+			} catch (SAXException | IOException | ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	    	
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
@@ -154,6 +177,58 @@ public class ClienteSimplesTCP {
 		}
     	
     }
+    
+    private static void loginMenu(Scanner sc) {
+    	System.out.println("**********************");
+    	System.out.println("*    Login    *");
+    	System.out.println("*  Username          *");
+    	String username = sc.next();
+    	System.out.println("*  Password          *");
+    	String pass = sc.next();
+    	System.out.println("**********************");
+    	JAXBContext jaxbContext;
+		try {
+			jaxbContext = JAXBContext.newInstance( LoginRequest.class );
+			Marshaller jaxbMarshaller   = jaxbContext.createMarshaller();
+			LoginRequest request = new LoginRequest();
+			request.setUsername(username);
+			request.setPassword(pass);
+	    	StringWriter sw = new StringWriter();
+	    	jaxbMarshaller.marshal(request, sw);
+	    	String xmlString = sw.toString();
+	    	post(xmlString);
+	    	String response = get();
+	    	jaxbContext = JAXBContext.newInstance( LoginResponse.class );
+	    	Unmarshaller jaxbUnmarshaller   = jaxbContext.createUnmarshaller();
+	    	Element node;
+			try {
+				node = DocumentBuilderFactory
+					    .newInstance()
+					    .newDocumentBuilder()
+					    .parse(new ByteArrayInputStream(response.getBytes()))
+					    .getDocumentElement();
+				
+				LoginResponse objResponse = (LoginResponse) jaxbUnmarshaller.unmarshal(node);
+				resultMenu(objResponse.getResultState());
+			} catch (SAXException | IOException | ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    private static void resultMenu(ResultState obj) {
+    	System.out.println("**********************");
+    	System.out.println("*       Result       *");
+    	System.out.println("*    	"+obj.getState()+"      *");
+    	System.out.println("*       "+obj.getDescription()+"      *");
+    	System.out.println("**********************");
+    }
+    
     
     public static void post(String out) {
 		// Escreve no socket
